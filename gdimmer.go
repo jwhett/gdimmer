@@ -2,13 +2,12 @@ package gdimmer
 
 import (
     "strings"
-    "strconv"
     "io/ioutil"
 )
 
 type Dimmer struct {
-    max     int
-    current int
+    max     string
+    current string
 }
 
 func check(e error) {
@@ -24,25 +23,20 @@ func New() (*Dimmer) {
     m, err := ioutil.ReadFile("/sys/class/backlight/gmux_backlight/max_brightness")
     check(err)
 
-    // current, err := strconv.Atoi(c)
     cur := strings.TrimSpace(string(c))
     check(err)
 
-    // max, err := strconv.Atoi(m)
     mx := strings.TrimSpace(string(m))
     check(err)
 
-    max, _ := strconv.Atoi(mx)
-    current, _ := strconv.Atoi(cur)
-
-    return &Dimmer{max: max, current: current}
+    return &Dimmer{max: mx, current: cur}
 }
 
-func (d *Dimmer) Max() int {
+func (d *Dimmer) Max() string {
     return d.max
 }
 
-func (d *Dimmer) Current() int {
+func (d *Dimmer) Current() string {
     return d.current
 }
 

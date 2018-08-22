@@ -3,21 +3,20 @@ package gdimmer_test
 import (
     "testing"
     "github.com/jwhett/gdimmer"
-    "fmt"
-    //"io/ioutil"
+    "io/ioutil"
+    "strings"
 )
 
 func TestInit(t *testing.T) {
     d := gdimmer.New()
-    m := 1023
-    c := 1023
+    m, _ := ioutil.ReadFile("/sys/class/backlight/gmux_backlight/max_brightness")
+    c, _ := ioutil.ReadFile("/sys/class/backlight/gmux_backlight/brightness")
 
-    if d.Max() != m {
-        fmt.Printf("Got: %d, Expected: %d", d.Max(), m)
+    if d.Max() != strings.TrimSpace(string(m)) {
         t.Error("Max not set properly...")
     }
 
-    if d.Current() != c {
+    if d.Current() != strings.TrimSpace(string(c)) {
         t.Error("Current not set properly...")
     }
 }
