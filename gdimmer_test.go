@@ -28,3 +28,18 @@ func TestInit(t *testing.T) {
     }
 }
 
+func TestSetBrightness(t *testing.T) {
+    // This will fail without root
+    d := gdimmer.New("gmux_backlight")
+
+    half := d.GetMax()/2
+    last := d.GetCurrent()
+
+    d.SetBrightness(half)
+
+    if d.GetCurrent() != half {
+        t.Error("Unable to set brightness properly...")
+    } else {
+        d.SetBrightness(last)
+    }
+}

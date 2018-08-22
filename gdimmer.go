@@ -55,3 +55,31 @@ func (d *Dimmer) GetMax() int {
 func (d *Dimmer) GetCurrent() int {
 	return getIntFromFile(d.currentfile)
 }
+
+
+// Set brightness to specified value.
+func (d *Dimmer) SetBrightness(b int) {
+    var (
+        max int
+    )
+
+	max = d.GetMax()
+
+    if b > max {
+        // Don't let someone assign something higher
+        // than the max value.
+        b = max
+    }
+
+    if b < 0 {
+        // Don't let someone assign something lower
+        // than zero.
+        b = 0
+    }
+
+	// Convert int to ASCII...
+	bstr := strconv.Itoa(b)
+	// ...then write a byte slice to the brightness file.
+	err := ioutil.WriteFile(d.currentfile, []byte(bstr), 0444)
+	check(err)
+}
