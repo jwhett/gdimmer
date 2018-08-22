@@ -6,8 +6,8 @@ import (
     "strings"
 )
 
+// Struct to represent the state of a screen dimmer.
 type Dimmer struct {
-    // Struct to represent the state of a screen dimmer.
     max     int
     current int
 }
@@ -18,8 +18,8 @@ func check(e error) {
     }
 }
 
+// Initialize a new dimmer with the system's current settings.
 func New() (*Dimmer) {
-    // Initialize a new dimmer with the system's current settings.
 
     // Take the []bytes from the "current brightness" file
     // and turn it into an integer.
@@ -38,13 +38,13 @@ func New() (*Dimmer) {
     return &Dimmer{max: max, current: current}
 }
 
+// Return the maximum brightness.
 func (d *Dimmer) Max() int {
-    // Return the maximum brightness.
     return d.max
 }
 
+// Return the current brightness.
 func (d *Dimmer) Current() int {
-    // Return the current brightness.
     return d.current
 }
 
