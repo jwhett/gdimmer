@@ -1,8 +1,9 @@
 package gdimmer
 
 import (
-    "strings"
     "io/ioutil"
+    "strconv"
+    "strings"
 )
 
 type Dimmer struct {
@@ -40,3 +41,12 @@ func (d *Dimmer) Current() string {
     return d.current
 }
 
+func (d *Dimmer) Maxasi() int {
+    imax, _ := strconv.Atoi(d.max)
+    return imax
+}
+
+func (d *Dimmer) Currentasi() int {
+    icur, _ := strconv.Atoi(d.current)
+    return icur
+}

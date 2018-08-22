@@ -1,10 +1,10 @@
 package gdimmer_test
 
 import (
-    "testing"
     "github.com/jwhett/gdimmer"
     "io/ioutil"
     "strings"
+    "testing"
 )
 
 func TestInit(t *testing.T) {
@@ -20,3 +20,4 @@ func TestInit(t *testing.T) {
         t.Error("Current not set properly...")
     }
 }
+
