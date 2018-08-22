@@ -1,8 +1,9 @@
 package gdimmer
 
 import (
-    // "fmt"
-    // "io"
+    "strings"
+    "strconv"
+    "io/ioutil"
 )
 
 type Dimmer struct {
@@ -10,8 +11,31 @@ type Dimmer struct {
     current int
 }
 
+func check(e error) {
+    if e != nil {
+        panic(e)
+    }
+}
+
 func New() (*Dimmer) {
-    return &Dimmer{max: 1024, current: 512}
+    c, err := ioutil.ReadFile("/sys/class/backlight/gmux_backlight/brightness")
+    check(err)
+
+    m, err := ioutil.ReadFile("/sys/class/backlight/gmux_backlight/max_brightness")
+    check(err)
+
+    // current, err := strconv.Atoi(c)
+    cur := strings.TrimSpace(string(c))
+    check(err)
+
+    // max, err := strconv.Atoi(m)
+    mx := strings.TrimSpace(string(m))
+    check(err)
+
+    max, _ := strconv.Atoi(mx)
+    current, _ := strconv.Atoi(cur)
+
+    return &Dimmer{max: max, current: current}
 }
 
 func (d *Dimmer) Max() int {
