@@ -9,7 +9,7 @@ import (
 )
 
 func TestInit(t *testing.T) {
-    d := gdimmer.New()
+    d := gdimmer.New("gmux_backlight")
 
     m, _ := ioutil.ReadFile("/sys/class/backlight/gmux_backlight/max_brightness")
     mx := strings.TrimSpace(string(m))
@@ -19,11 +19,11 @@ func TestInit(t *testing.T) {
     cur := strings.TrimSpace(string(c))
     current, _ := strconv.Atoi(cur)
 
-    if d.Max() != max {
+    if d.GetMax() != max {
         t.Error("Max not set properly...")
     }
 
-    if d.Current() != current {
+    if d.GetCurrent() != current {
         t.Error("Current not set properly...")
     }
 }
