@@ -35,24 +35,23 @@ func New(provider string) (*Dimmer) {
     return &Dimmer{maxfile: max, currentfile: current}
 }
 
+func getIntFromFile(fp string) int {
+    // Take the []bytes from the file path provided
+    // and turn it into an integer.
+    i, err := ioutil.ReadFile(fp)
+    check(err)
+    istring := strings.TrimSpace(string(i))
+    fullint, err := strconv.Atoi(istring)
+    check(err)
+    return fullint
+}
+
 // Return the maximum brightness.
 func (d *Dimmer) GetMax() int {
-    // Take the []bytes from the "max brightness" file
-    // and turn it into an integer.
-    m, err := ioutil.ReadFile(d.maxfile)
-    check(err)
-    mx := strings.TrimSpace(string(m))
-    max, _ := strconv.Atoi(mx)
-    return max
+	return getIntFromFile(d.maxfile)
 }
 
 // Return the current brightness.
 func (d *Dimmer) GetCurrent() int {
-    // Take the []bytes from the "current brightness" file
-    // and turn it into an integer.
-    c, err := ioutil.ReadFile(d.currentfile)
-    check(err)
-    cur := strings.TrimSpace(string(c))
-    current, _ := strconv.Atoi(cur)
-    return current
+	return getIntFromFile(d.currentfile)
 }
