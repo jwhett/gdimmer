@@ -56,6 +56,13 @@ func (d *Dimmer) GetCurrent() int {
 	return getIntFromFile(d.currentfile)
 }
 
+// Return the step value.
+func (d *Dimmer) GetStep() int {
+    var max float64 = float64(d.GetMax())
+    var step float64 = 0.1
+    var stepby int = int(max * step)
+    return stepby
+}
 
 // Set brightness to specified value.
 func (d *Dimmer) SetBrightness(b int) {
@@ -82,4 +89,14 @@ func (d *Dimmer) SetBrightness(b int) {
 	// ...then write a byte slice to the brightness file.
 	err := ioutil.WriteFile(d.currentfile, []byte(bstr), 0444)
 	check(err)
+}
+
+// Step brightness down.
+func (d *Dimmer) StepDown() {
+    d.SetBrightness(d.GetCurrent() - d.GetStep())
+}
+
+// Step brightness up.
+func (d *Dimmer) StepUp() {
+    d.SetBrightness(d.GetCurrent() + d.GetStep())
 }
