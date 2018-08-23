@@ -3,7 +3,6 @@ package gdimmer
 import (
     "io/ioutil"
     "strconv"
-    "strings"
 )
 
 // Struct to represent the state of a screen dimmer.
@@ -28,9 +27,9 @@ func New(provider string) (*Dimmer) {
     )
 
 	// Build path to important files.
-    basedir = strings.Join([]string{"/sys/class/backlight/", provider}, "")
-    current = strings.Join([]string{basedir, "/brightness"}, "")
-    max     = strings.Join([]string{basedir, "/max_brightness"}, "")
+    basedir = "/sys/class/backlight/" + provider
+    current = basedir + "/brightness"
+    max     = basedir + "/max_brightness"
 
     return &Dimmer{maxfile: max, currentfile: current}
 }
@@ -40,7 +39,7 @@ func getIntFromFile(fp string) int {
     // and turn it into an integer.
     i, err := ioutil.ReadFile(fp)
     check(err)
-    istring := strings.TrimSpace(string(i))
+    istring := string(i[:len(i) - 1])
     fullint, err := strconv.Atoi(istring)
     check(err)
     return fullint
