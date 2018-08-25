@@ -17,8 +17,8 @@ func main() {
 	if len(os.Getenv("BLPROVIDER")) > 0 {
 		provider = os.Getenv("BLPROVIDER")
 	} else {
-		flag.StringVar(&provider, "provider", "gmux_backlight", "Chose backlight provider. Defaults to GMUX (Macintosh). Find your provider in /sys/class/backlight/.")
-		flag.StringVar(&provider, "p", "gmux_backlight", "Chose backlight provider. Defaults to GMUX (Macintosh). Find your provider in /sys/class/backlight/.")
+		flag.StringVar(&provider, "provider", "gmux_backlight", "Chose backlight provider. Defaults to GMUX (Macintosh). Find your provider in /sys/class/backlight/. BLPROVIDER environment variable can also be set.")
+		flag.StringVar(&provider, "p", "gmux_backlight", "Chose backlight provider. Defaults to GMUX (Macintosh). Find your provider in /sys/class/backlight/. BLPROVIDER environment variable can also be set.")
 	}
 
 	flag.BoolVar(&up, "up", false, "Turn up the brightness.")
