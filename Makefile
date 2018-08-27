@@ -17,7 +17,8 @@ doctest: docs
 	/usr/bin/man doc/gdimmer.1.gz
 
 install-docs: docs
-	install -o root -g root -m 0644 doc/gdimmer.1.gz /usr/local/share/man/man1/
+	install -D -o root -g root -m 0644 doc/gdimmer.1.gz -t /usr/local/share/man/man1/
+	mandb
 
 install-cmd:
 	cd cmd/gdimmer
