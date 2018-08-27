@@ -4,6 +4,7 @@ import (
 	"flag"
 	gd "github.com/jwhett/gdimmer"
 	"os"
+	"path/filepath"
 )
 
 func main() {
@@ -33,7 +34,7 @@ func main() {
 	flag.IntVar(&set, "s", 1, "Explicitly set brightness to VALUE.")
 	flag.Parse()
 
-	d := gd.New(provider)
+	d := gd.New(filepath.Base(provider))
 
 	if up {
 		d.StepUp()
