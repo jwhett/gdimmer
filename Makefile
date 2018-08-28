@@ -1,27 +1,38 @@
-.PHONY: test clean doctest build docs doctest install-docs install
+.PHONY: test clean doctest build docs doctest install-docs install-cmd install
+
+MAN = /usr/bin/man
+DOCSRC = doc/gdimmer.md
+DOCOUT = doc/gdimmer.1.gz
+DOCDIR = /usr/local/share/man/man1/
+BINDIR = cmd/gdimmer
+BINSRC = $(BINDIR)/main.go
+BINOUT = $(BINDIR)/gdimmer
+INSTALLOPTS = -D -o root -g root -m 0644
+
+
 default: build;
 
 test:
 	go test
 
 clean:
-	git clean -dxf
+	$(RM) $(DOCOUT) $(BINOUT)
+	
+install: install-cmd install-docs
 
 docs:
-	pandoc doc/gdimmer.md -s -t man | gzip > doc/gdimmer.1.gz
+	pandoc $(DOCSRC) -s -t man | gzip > $(DOCOUT)
 	
 build: docs
-	go build -o cmd/gdimmer/gdimmer cmd/gdimmer/main.go
+	go build -o $(BINOUT) $(BINSRC)
 
 doctest: docs
-	/usr/bin/man doc/gdimmer.1.gz
+	$(MAN) $(DOCOUT)
 
 install-docs: docs
-	install -D -o root -g root -m 0644 doc/gdimmer.1.gz -t /usr/local/share/man/man1/
+	install $(INSTALLOPTS) $(DOCOUT) -t $(DOCDIR)
 	mandb
 
 install-cmd:
-	cd cmd/gdimmer
+	cd $(BINDIR)
 	go install
-
-install: install-cmd install-docs
