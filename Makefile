@@ -1,9 +1,9 @@
 .PHONY: test clean doctest build docs doctest install-docs install-cmd install
 
-MAN = /usr/bin/man
+MAN ?= /usr/bin/man
 DOCSRC = doc/gdimmer.md
 DOCOUT = doc/gdimmer.1.gz
-DOCDIR = /usr/local/share/man/man1/
+DOCDIR ?= /usr/local/share/man/man1/
 BINDIR = cmd/gdimmer
 BINSRC = $(BINDIR)/main.go
 BINOUT = $(BINDIR)/gdimmer
