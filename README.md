@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jwhett/gdimmer.svg?branch=master)](https://travis-ci.org/jwhett/gdimmer)
+
 
 `gdimmer` - Backlight dimmer written in Go
 
