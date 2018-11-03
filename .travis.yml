@@ -1,3 +1,8 @@
 language: go
 go:
     - "1.10"
+before_install:
+    - sudo apt-get install -y pandoc
+addons:
+    apt:
+        update: true
