@@ -1,4 +1,7 @@
+
+[![Godoc Reference](https://godoc.org/github.com/jwhett/gdimmer?status.svg)](http://godoc.org/github.com/jwhett/gdimmer)
 [![Build Status](https://travis-ci.org/jwhett/gdimmer.svg?branch=master)](https://travis-ci.org/jwhett/gdimmer)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jwhett/gdimmer)](https://goreportcard.com/report/github.com/jwhett/gdimmer)
 
 
 `gdimmer` - Backlight dimmer written in Go
