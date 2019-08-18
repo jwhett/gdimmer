@@ -9,24 +9,6 @@ import (
 	gd "github.com/jwhett/gdimmer"
 )
 
-func getProviders() ([]string, error) {
-	providerDir, err := os.Open("/sys/class/backlight")
-
-	if err != nil {
-		fmt.Printf("Failed to open file: %s\n", err)
-		return []string{}, err
-	}
-	defer providerDir.Close()
-
-	providers, err := providerDir.Readdirnames(0)
-	if err != nil {
-		fmt.Printf("Failed to read dir names: %s\n", err)
-		return []string{}, err
-	}
-
-	return providers, nil
-}
-
 func main() {
 
 	var (
@@ -35,7 +17,7 @@ func main() {
 		set                  int
 	)
 
-	providers, err := getProviders()
+	providers, err := gdimmer.GetProviders()
 	if err != nil {
 		fmt.Printf("Failed to get providers: %s", err)
 		os.Exit(1)

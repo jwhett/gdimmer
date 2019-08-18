@@ -1,24 +1,34 @@
 package gdimmer_test
 
 import (
-	"github.com/jwhett/gdimmer"
+	"fmt"
 	"io/ioutil"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/jwhett/gdimmer"
 )
 
 func TestInit(t *testing.T) {
-	d := gdimmer.New("gmux_backlight")
+	providers, err := gdimmer.GetProviders()
+	if err != nil {
+		fmt.Printf("Error getting providers: %s\n", err)
+	}
+	firstProvider := providers[0]
+	fullProvider := gdimmer.ProviderDir + "/" + firstProvider
+	t.Logf("fullProvider: %s\n", fullProvider)
 
-	m, err := ioutil.ReadFile("/sys/class/backlight/gmux_backlight/max_brightness")
+	d := gdimmer.New(firstProvider)
+
+	m, err := ioutil.ReadFile(fullProvider + "/max_brightness")
 	if err != nil {
 		t.Skip("Unable to read brightness files.")
 	}
 	mx := strings.TrimSpace(string(m))
 	max, _ := strconv.Atoi(mx)
 
-	c, err := ioutil.ReadFile("/sys/class/backlight/gmux_backlight/brightness")
+	c, err := ioutil.ReadFile(fullProvider + "/brightness")
 	if err != nil {
 		t.Skip("Unable to read brightness files.")
 	}
