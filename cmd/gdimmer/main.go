@@ -17,7 +17,7 @@ func main() {
 		set                  int
 	)
 
-	providers, err := gdimmer.GetProviders()
+	providers, err := gd.GetProviders()
 	if err != nil {
 		fmt.Printf("Failed to get providers: %s", err)
 		os.Exit(1)
