@@ -2,10 +2,30 @@ package main
 
 import (
 	"flag"
-	gd "github.com/jwhett/gdimmer"
+	"fmt"
 	"os"
 	"path/filepath"
+
+	gd "github.com/jwhett/gdimmer"
 )
+
+func getProviders() ([]string, error) {
+	providerDir, err := os.Open("/sys/class/backlight")
+
+	if err != nil {
+		fmt.Printf("Failed to open file: %s\n", err)
+		return []string{}, err
+	}
+	defer providerDir.Close()
+
+	providers, err := providerDir.Readdirnames(0)
+	if err != nil {
+		fmt.Printf("Failed to read dir names: %s\n", err)
+		return []string{}, err
+	}
+
+	return providers, nil
+}
 
 func main() {
 
@@ -15,12 +35,21 @@ func main() {
 		set                  int
 	)
 
+	providers, err := getProviders()
+	if err != nil {
+		fmt.Printf("Failed to get providers: %s", err)
+		os.Exit(1)
+	}
+
 	if len(os.Getenv("BLPROVIDER")) > 0 {
 		provider = os.Getenv("BLPROVIDER")
-	} else {
-		flag.StringVar(&provider, "provider", "gmux_backlight", "Chose backlight provider. Defaults to GMUX (Macintosh). Find your provider in /sys/class/backlight/. BLPROVIDER environment variable can also be set.")
-		flag.StringVar(&provider, "p", "gmux_backlight", "Chose backlight provider. Defaults to GMUX (Macintosh). Find your provider in /sys/class/backlight/. BLPROVIDER environment variable can also be set.")
+	} else if len(providers) > 0 {
+		// just take the first one always
+		provider = providers[0]
 	}
+
+	flag.StringVar(&provider, "provider", provider, "Chose backlight provider. Defaults to first provider found. Find your provider in /sys/class/backlight/. BLPROVIDER environment variable can also be set.")
+	flag.StringVar(&provider, "p", provider, "Chose backlight provider. Defaults to first provider found. Find your provider in /sys/class/backlight/. BLPROVIDER environment variable can also be set.")
 
 	flag.BoolVar(&up, "up", false, "Turn up the brightness.")
 	flag.BoolVar(&up, "u", false, "Turn up the brightness.")

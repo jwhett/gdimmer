@@ -30,7 +30,7 @@ You may choose to set the **BLPROVIDER** environment variable instead of using *
 :	Display help...
 
 **-p**, **-provider**
-:	Set your backlight provider. Providers are listed as directories in /sys/class/backlight/. Can be full path or basename. This is "gmux_backlight" by default.
+:	Set your backlight provider. Providers are listed as directories in /sys/class/backlight/. Can be full path or basename. This is the first provider found in /sys/class/backlight by default.
 
 **-u**, **-up**
 :	Increase the brightness. Default step is 10%.
