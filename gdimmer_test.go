@@ -75,12 +75,22 @@ func TestSysfsProvider(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create brightness file for SysfsProvider: %s", err)
 	}
+
 	sp, err := gdimmer.NewSysfsProvider(tmpDir)
 	if err != nil {
 		t.Error("SysfsProvider unable to init...")
 	}
+
 	curr, err := sp.GetCurrent()
+	if err != nil {
+		t.Errorf("SysfsProvider error retrieving current value: %s", err)
+	}
+
 	if curr != 30 {
 		t.Errorf("SysfsProvider failed to return correct current val... Returned: %v", curr)
+	}
+
+	if sp.GetMax() != 100 {
+		t.Error("Failed to retrieve max value on sysfs provider.")
 	}
 }
