@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
 
 	gd "github.com/jwhett/gdimmer"
 )
@@ -45,7 +44,12 @@ func main() {
 	flag.IntVar(&set, "s", 1, "Explicitly set brightness to VALUE.")
 	flag.Parse()
 
-	d := gd.New(filepath.Base(provider))
+	sp, err := gd.NewSysfsProvider(gd.ProviderDir + "/" + provider)
+	if err != nil {
+		fmt.Printf("Cannot create new sysfs provider: %s", err)
+		os.Exit(2)
+	}
+	d := gd.New(sp)
 
 	if up {
 		d.StepUp()
