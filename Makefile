@@ -1,4 +1,4 @@
-.PHONY: test clean doctest build docs doctest install-docs install-cmd install
+.PHONY: test clean doctest build docs doctest install-docs install-cmd install prof
 
 MAN ?= /usr/bin/man
 DOCSRC = doc/gdimmer.md
@@ -14,6 +14,10 @@ default: build;
 
 test:
 	go test
+
+prof:
+	go test -coverprofile=prof
+	go tool cover -html prof
 
 clean:
 	$(RM) $(DOCOUT) $(BINOUT)

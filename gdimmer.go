@@ -9,8 +9,48 @@ import (
 
 // Dimmer struct to represent the state of a screen dimmer.
 type Dimmer struct {
-	maxfile     string
-	currentfile string
+	Provider
+}
+
+// SysfsProvider is a real provider in sysfs
+type SysfsProvider struct {
+	path string
+	max  int
+}
+
+// force all SysfsProviders implement Provider interface
+var _ Provider = SysfsProvider{}
+
+// Provider is an interface lol
+type Provider interface {
+	GetMax() int
+	GetCurrent() (int, error)
+	SetCurrent(int) error
+}
+
+// NewSysfsProvider builds a SysfsProvider with
+// proper initialization.
+func NewSysfsProvider(path string) (SysfsProvider, error) {
+	max, err := getIntFromFile(path + "/max_brightness")
+	return SysfsProvider{max: max, path: path}, err
+}
+
+// GetMax returns the maximum brightness.
+func (sp SysfsProvider) GetMax() int {
+	return sp.max
+}
+
+// GetCurrent returns the current brightness.
+func (sp SysfsProvider) GetCurrent() (int, error) {
+	return getIntFromFile(sp.path + "/brightness")
+}
+
+// SetCurrent returns the current brightness.
+func (sp SysfsProvider) SetCurrent(newlvl int) error {
+	// Convert int to ASCII...
+	bstr := strconv.Itoa(newlvl)
+	// ...then write a byte slice to the brightness file.
+	return ioutil.WriteFile(sp.path+"/brightness", []byte(bstr), 0444)
 }
 
 const (
@@ -45,58 +85,38 @@ func GetProviders() ([]string, error) {
 }
 
 // New initializes a new dimmer with the system's current settings.
-func New(provider string) *Dimmer {
-
-	var (
-		basedir string
-		current string
-		max     string
-	)
-
-	// Build path to important files.
-	basedir = ProviderDir + "/" + provider
-	current = basedir + "/brightness"
-	max = basedir + "/max_brightness"
-
-	return &Dimmer{maxfile: max, currentfile: current}
+func New(provider Provider) *Dimmer {
+	return &Dimmer{Provider: provider}
 }
 
-func getIntFromFile(fp string) int {
-	// Take the []bytes from the file path provided
-	// and turn it into an integer.
+// getIntFromFile takes the []bytes from the file path provided
+// and turn it into an integer.
+func getIntFromFile(fp string) (int, error) {
 	i, err := ioutil.ReadFile(fp)
-	check(err)
+	if err != nil {
+		return 0, err
+	}
 	istring := string(i[:len(i)-1])
 	fullint, err := strconv.Atoi(istring)
-	check(err)
-	return fullint
-}
-
-// GetMax returns the maximum brightness.
-func (d *Dimmer) GetMax() int {
-	return getIntFromFile(d.maxfile)
-}
-
-// GetCurrent returns the current brightness.
-func (d *Dimmer) GetCurrent() int {
-	return getIntFromFile(d.currentfile)
+	if err != nil {
+		return 0, err
+	}
+	return fullint, err
 }
 
 // GetStep returns the step value.
 func (d *Dimmer) GetStep() int {
-	var max = float64(d.GetMax())
-	var step = 0.1
-	var stepby = int(max * step)
-	return stepby
+	max := d.Provider.GetMax()
+	return int(float64(max) * 0.1)
 }
 
 // SetBrightness sets the brightness to specified value.
-func (d *Dimmer) SetBrightness(b int) {
+func (d *Dimmer) SetBrightness(b int) error {
 	var (
 		max int
 	)
 
-	max = d.GetMax()
+	max = d.Provider.GetMax()
 
 	if b > max {
 		// Don't let someone assign something higher
@@ -110,19 +130,23 @@ func (d *Dimmer) SetBrightness(b int) {
 		b = 0
 	}
 
-	// Convert int to ASCII...
-	bstr := strconv.Itoa(b)
-	// ...then write a byte slice to the brightness file.
-	err := ioutil.WriteFile(d.currentfile, []byte(bstr), 0444)
-	check(err)
+	return d.Provider.SetCurrent(b)
 }
 
 // StepDown decreases the brightness by step.
-func (d *Dimmer) StepDown() {
-	d.SetBrightness(d.GetCurrent() - d.GetStep())
+func (d *Dimmer) StepDown() error {
+	current, err := d.GetCurrent()
+	if err != nil {
+		return err
+	}
+	return d.SetBrightness(current - d.GetStep())
 }
 
 // StepUp increases brightness by step.
-func (d *Dimmer) StepUp() {
-	d.SetBrightness(d.GetCurrent() + d.GetStep())
+func (d *Dimmer) StepUp() error {
+	current, err := d.GetCurrent()
+	if err != nil {
+		return err
+	}
+	return d.SetBrightness(current + d.GetStep())
 }
