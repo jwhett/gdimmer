@@ -1,4 +1,4 @@
-.PHONY: test clean doctest build docs doctest install-docs install-cmd install prof
+.PHONY: test clean doctest build docs doctest install-docs install-cmd install prof snap
 
 MAN ?= /usr/bin/man
 DOCSRC = doc/gdimmer.md
@@ -40,3 +40,6 @@ install-docs: docs
 install-cmd:
 	cd $(BINDIR)
 	go install
+
+snap:
+	snapcraft --use-lxd --debug

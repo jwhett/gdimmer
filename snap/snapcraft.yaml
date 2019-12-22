@@ -1,0 +1,19 @@
+name: gdimmer
+base: core18
+version: git
+summary: Laptop screen dimmer in Go
+description: |
+  Developed for use with Linux DEs that do not have
+  build-in dimmers.
+
+grade: devel
+confinement: devmode
+
+parts:
+  gdimmer:
+    plugin: go
+    source: .
+
+apps:
+  gdimmer:
+    command: gdimmer

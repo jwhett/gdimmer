@@ -1,3 +1,4 @@
 cmd/gdimmer/gdimmer
 doc/*.gz
 prof
+*.snap
