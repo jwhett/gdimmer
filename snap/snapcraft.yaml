@@ -7,12 +7,16 @@ description: |
   build-in dimmers.
 
 grade: devel
-confinement: devmode
+confinement: strict
+
+plugs:
+  system-files: null
 
 parts:
   gdimmer:
     plugin: go
     source: .
+    source-type: git
 
 apps:
   gdimmer:
