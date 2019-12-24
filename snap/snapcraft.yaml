@@ -10,15 +10,7 @@ grade: devel
 confinement: strict
 
 plugs:
-  system-files:
-    read:
-      - /sys/class/backlight/gmux_backlight/brightness
-      - /sys/class/backlight/gmux_backlight/brightness
-      - /sys/class/backlight/intel_backlight/max_brightness
-      - /sys/class/backlight/intel_backlight/max_brightness
-    write:
-      - /sys/class/backlight/gmux_backlight/brightness
-      - /sys/class/backlight/intel_backlight/brightness
+  display-control: null
 
 parts:
   gdimmer:
